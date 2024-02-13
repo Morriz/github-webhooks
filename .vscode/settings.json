@@ -3,10 +3,27 @@
     "editor.codeActionsOnSave": {
       "source.addMissingImports": "always",
       "source.fixAll": "always",
-      "source.organizeImports": "always"
+      "source.fixAll.unusedImports": "always",
+      "source.organizeImports": "always",
+      "source.unusedImports": "always"
     },
     "editor.defaultFormatter": "ms-python.black-formatter",
     "editor.tabSize": 4
   },
   "black-formatter.importStrategy": "fromEnvironment",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "mypy-type-checker.importStrategy": "fromEnvironment",
+  "mypy-type-checker.preferDaemon": true,
+  "mypy-type-checker.reportingScope": "workspace",
+  "prettier.enable": true,
+  "pylint.importStrategy": "fromEnvironment",
+  "python.analysis.addImport.exactMatchOnly": true,
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.enableSyncServer": true,
+  "python.analysis.include": [ "api", "lib", "pages" ],
+  "python.defaultInterpreterPath": ".venv/bin/python",
+  "python.terminal.activateEnvInCurrentTerminal": true,
+  "python.testing.unittestArgs": [ "-v", "-s", ".", "-p", "*_test.py" ],
+  "python.testing.unittestEnabled": false
 }

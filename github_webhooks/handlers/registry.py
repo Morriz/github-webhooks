@@ -63,11 +63,11 @@ class HandlersRegistry:
         query_params: QueryParams,
         background_tasks: BackgroundTasks,
     ) -> HandlerResult:
-        h_varnames = handler.__code__.co_varnames  # type: ignore
-
-        if 'headers' in h_varnames:
+        # h_varnames = handler.__code__.co_varnames
+        if isinstance(handler, AnyHandlerWithHeaders):  # type: ignore
+            # if 'headers' in h_varnames:
             handler = cast(AnyHandlerWithHeaders, handler)
             return await handler(*args, headers=headers, query_params=query_params, background_tasks=background_tasks)
 
         handler = cast(AnyHandlerWithoutHeaders, handler)
-        return await handler(*args, query_params=query_params, background_tasks=background_tasks)  # type: ignore
+        return await handler(*args, query_params=query_params, background_tasks=background_tasks)

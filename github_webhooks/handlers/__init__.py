@@ -1,4 +1,4 @@
-from . import ping
+from .ping import PingPayload, handle_ping
 from .registry import HandlersRegistry
 
 __all__ = (
@@ -8,4 +8,4 @@ __all__ = (
 
 
 registry = HandlersRegistry()
-registry.add_handler('ping', ping.PingPayload, ping.handle_ping)
+registry.add_handler('ping', PingPayload, handle_ping)

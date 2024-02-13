@@ -12,7 +12,7 @@ HandlerResult = Optional[str]
 
 class HandlerBasic(Protocol):
     async def __call__(
-        self, payload: Any, query_params: QueryParams, background_tasks: BackgroundTasks
+        self, payload: Any, *, query_params: QueryParams, background_tasks: BackgroundTasks
     ) -> HandlerResult:
         # actually payload will be parsed pydantic model
         ...
@@ -28,7 +28,7 @@ class HandlerWithHeaders(Protocol):
 
 class DefaultHandlerBasic(Protocol):
     async def __call__(
-        self, event: str, payload: bytes, query_params: QueryParams, background_tasks: BackgroundTasks
+        self, event: str, payload: bytes, *, query_params: QueryParams, background_tasks: BackgroundTasks
     ) -> HandlerResult: ...
 
 

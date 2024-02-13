@@ -1,9 +1,9 @@
 black
 build
-flake8
 isort
 mypy
+pre-commit
 pylint
-pyproject-flake8
+pyproject-fmt
 uvicorn
 twine

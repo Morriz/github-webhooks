@@ -3,7 +3,7 @@ import logging
 from typing import Optional
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException, Request
-from pydantic import parse_obj_as
+from pydantic import TypeAdapter
 
 from .schemas import WebhookHeaders
 
@@ -15,7 +15,7 @@ async def webhook_handler(
     request: Request,
     background_tasks: BackgroundTasks,
 ) -> str:
-    headers = parse_obj_as(WebhookHeaders, request.headers)
+    headers = TypeAdapter(WebhookHeaders).validate_json(request.headers)
 
     payload_body: bytes = await request.body()
 
