@@ -1,4 +1,4 @@
-from typing import Any, Callable, Union, cast
+from typing import Any, Callable
 
 from fastapi import BackgroundTasks
 from starlette.requests import QueryParams
@@ -6,18 +6,18 @@ from starlette.requests import QueryParams
 from github_webhooks.schemas import WebhookHeaders
 
 from .default import handle_default
-from .types import AnyHandlerWithHeaders, AnyHandlerWithoutHeaders, DefaultHandler, Handler, HandlerResult, PayloadT
+from .types import Handler, HandlerResult, PayloadT
 
 
 class HandlersRegistry:
     _handlers: dict[str, tuple[PayloadT, Handler]]
-    _default_handler: DefaultHandler
+    _default_handler: Handler
 
     def __init__(self) -> None:
         self._handlers = {}
         self._default_handler = handle_default
 
-    def set_default_handler(self, handler: DefaultHandler) -> None:
+    def set_default_handler(self, handler: Handler) -> None:
         self._default_handler = handler
 
     def add_handler(self, event: str, payload_cls: PayloadT, handler: Handler) -> None:
@@ -57,17 +57,10 @@ class HandlersRegistry:
 
     @staticmethod
     async def _call_with_headers(
-        handler: Union[DefaultHandler, Handler],
+        handler: Handler,
         *args: Any,
         headers: WebhookHeaders,
         query_params: QueryParams,
         background_tasks: BackgroundTasks,
     ) -> HandlerResult:
-        # h_varnames = handler.__code__.co_varnames
-        if isinstance(handler, AnyHandlerWithHeaders):  # type: ignore
-            # if 'headers' in h_varnames:
-            handler = cast(AnyHandlerWithHeaders, handler)
-            return await handler(*args, headers=headers, query_params=query_params, background_tasks=background_tasks)
-
-        handler = cast(AnyHandlerWithoutHeaders, handler)
-        return await handler(*args, query_params=query_params, background_tasks=background_tasks)
+        return await handler(*args, headers=headers, query_params=query_params, background_tasks=background_tasks)

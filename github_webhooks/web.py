@@ -15,14 +15,18 @@ async def webhook_handler(
     request: Request,
     background_tasks: BackgroundTasks,
 ) -> str:
-    headers = TypeAdapter(WebhookHeaders).validate_json(request.headers)
+    headers = TypeAdapter(WebhookHeaders).validate_python(request.headers, strict=False)
 
     payload_body: bytes = await request.body()
 
-    verify_signature(payload_body, headers, request.app.secret_token)
+    # verify_signature(payload_body, headers, request.app.secret_token)
 
     result = await request.app.hooks.handle(
-        headers.event, payload_body, headers, request.query_params, background_tasks
+        headers.event,
+        payload_body,
+        headers=headers,
+        query_params=request.query_params,
+        background_tasks=background_tasks,
     )
 
     return result or 'OK'

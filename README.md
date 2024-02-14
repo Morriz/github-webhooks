@@ -115,6 +115,13 @@ async def handler(payload: PullRequestPayload, headers: WebhookHeaders, query_pa
     ...
 ```
 
+When not in need of any of the named params simply take them as `**_: Any` as not used:
+
+```python
+async def handler(payload: PullRequestPayload, **_: Any) -> Optional[str]:
+    ...
+```
+
 An example setup can be found in `example/server.py`.
 
 ## References:

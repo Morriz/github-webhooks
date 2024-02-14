@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from starlette.requests import QueryParams
 
 from github_webhooks import create_app
-from github_webhooks.schemas import WebhookCommonPayload
+from github_webhooks.schemas import WebhookCommonPayload, WebhookHeaders
 
 
 class PullPayload(WebhookCommonPayload):
@@ -35,7 +35,7 @@ app = create_app(secret_token='super-secret-token')
 # Register new handler via deco
 @app.hooks.register('pull_request', PullPayload)
 async def handle_pull_request(
-    payload: PullPayload, query_params: QueryParams, background_tasks: BackgroundTasks
+    payload: PullPayload, headers: WebhookHeaders, query_params: QueryParams, background_tasks: BackgroundTasks
 ) -> Optional[str]:
     logging.info(
         'PR <%s> opened by <%s>\nlink: %s',
