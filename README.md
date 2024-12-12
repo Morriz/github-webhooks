@@ -107,18 +107,11 @@ We are using here `@app.hooks.register` deco, which accepts 2 arguments:
 - `payload_cls: pydantic.BaseModel` - pydantic model class to parse request, subclassed from `pydantic.BaseModel`
   or `WebhookCommonPayload`.
 
-And our handler function can include the following params:
+And our handler function may include the following (named) params:
 
 ```python
 async def handler(payload: PullRequestPayload, headers: WebhookHeaders, query_params: QueryParams, background_tasks: BackgroundTasks) -> Optional[str]:
     # `headers` will be WebhookHeaders model with Github Webhook headers parsed.
-    ...
-```
-
-When not in need of any of the named params simply take them as `**_: Any` as not used:
-
-```python
-async def handler(payload: PullRequestPayload, **_: Any) -> Optional[str]:
     ...
 ```
 

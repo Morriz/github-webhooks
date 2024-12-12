@@ -2,7 +2,7 @@ import logging
 from typing import Optional
 
 from fastapi import BackgroundTasks
-from starlette.requests import QueryParams
+from fastapi.datastructures import QueryParams
 
 from github_webhooks.schemas import WebhookCommonPayload, WebhookHeaders
 

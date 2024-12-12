@@ -1,5 +1,4 @@
 import hmac
-import json
 import logging
 import urllib.parse
 from typing import Optional
@@ -27,30 +26,14 @@ async def webhook_handler(
     # - &project=...
     # so we have to accomodate for that
 
-    # Convert bytes to string first
     payload = payload_body.decode('utf-8')
+    # also url decode
+    payload = urllib.parse.unquote(payload)
 
-    # Try parsing as direct JSON first
-    try:
-        # First attempt: direct JSON parsing
-        json.loads(payload)
-    except json.JSONDecodeError:
-        # If direct parsing fails, try URL decoding
-        try:
-            # Remove 'payload=' prefix if exists
-            if payload.startswith('payload='):
-                payload = payload[8:]
-                # also remove last part with and after last occurence of '&'
-                payload = payload[: payload.rindex('&')]
-
-            # URL decode
-            payload = urllib.parse.unquote(payload)
-
-            # Parse decoded payload
-            json.loads(payload)
-        except (json.JSONDecodeError, TypeError) as e:
-            # If all parsing attempts fail, raise an informative error
-            raise ValueError(f"Unable to parse payload: {e}") from e
+    if payload.startswith('payload='):
+        payload = payload[8:]
+        # also remove last part with and after last occurence of '&'
+        payload = payload[: payload.rindex('&')]
 
     result = await request.app.hooks.handle(
         headers.event,

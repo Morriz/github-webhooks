@@ -1,7 +1,7 @@
 from typing import Any, Callable
 
 from fastapi import BackgroundTasks
-from starlette.requests import QueryParams
+from fastapi.datastructures import QueryParams
 
 from github_webhooks.schemas import WebhookHeaders
 
@@ -40,9 +40,8 @@ class HandlersRegistry:
     ) -> HandlerResult:
         if event not in self._handlers:
             return await self._call_with_headers(
-                self._default_handler,
-                event,
-                payload,
+                handler=self._default_handler,
+                payload=event,
                 headers=headers,
                 query_params=query_params,
                 background_tasks=background_tasks,
@@ -52,15 +51,21 @@ class HandlersRegistry:
 
         payload_parsed = payload_cls.model_validate_json(payload)
         return await self._call_with_headers(
-            handler, payload_parsed, headers=headers, query_params=query_params, background_tasks=background_tasks
+            handler=handler,
+            payload=payload_parsed,
+            headers=headers,
+            query_params=query_params,
+            background_tasks=background_tasks,
         )
 
     @staticmethod
     async def _call_with_headers(
         handler: Handler,
-        *args: Any,
+        payload: Any,
         headers: WebhookHeaders,
         query_params: QueryParams,
         background_tasks: BackgroundTasks,
     ) -> HandlerResult:
-        return await handler(*args, headers=headers, query_params=query_params, background_tasks=background_tasks)
+        return await handler(
+            payload=payload, headers=headers, query_params=query_params, background_tasks=background_tasks
+        )

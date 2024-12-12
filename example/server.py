@@ -3,8 +3,8 @@ from typing import Optional
 
 import uvicorn
 from fastapi import BackgroundTasks
+from fastapi.datastructures import QueryParams
 from pydantic import BaseModel
-from starlette.requests import QueryParams
 
 from github_webhooks import create_app
 from github_webhooks.schemas import WebhookCommonPayload, WebhookHeaders
